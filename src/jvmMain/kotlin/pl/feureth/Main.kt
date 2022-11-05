@@ -15,7 +15,7 @@ class Main : KoinComponent {
         startKoin {
             modules(
                 module {
-                    single<AppView> { ConsoleView() }
+                    single<AppView> { DesktopView() }
                     single<BookRepository> { LocalBookRepository() }
                 }
             )
