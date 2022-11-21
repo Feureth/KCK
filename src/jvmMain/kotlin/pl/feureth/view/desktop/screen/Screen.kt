@@ -1,4 +1,4 @@
-package pl.feureth.view.desktop
+package pl.feureth.view.desktop.screen
 
 sealed class Screen(val data: String? = null) {
 
