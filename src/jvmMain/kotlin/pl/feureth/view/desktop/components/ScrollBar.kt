@@ -29,12 +29,11 @@ fun ScrollBar(scrollState: LazyListState, modifier: Modifier = Modifier) {
             with(density) { viewHeightPx.toDp() }
         }
     }
-//    val barHeight by remember(viewHeight, visibleItems, itemsCount) {
-//        derivedStateOf {
-//            viewHeight * (visibleItems / itemsCount.toFloat())
-//        }
-//    }
-    val barHeight = 200.dp
+    val barHeight by remember(viewHeight, visibleItems, itemsCount) {
+        derivedStateOf {
+            viewHeight * (visibleItems / itemsCount.toFloat())
+        }
+    }
 
     var isDragging by remember { mutableStateOf(false) }
     var manualBarPosition by remember { mutableStateOf(0.dp) }
