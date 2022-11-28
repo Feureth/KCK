@@ -5,7 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -15,7 +18,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import pl.feureth.model.Book
-import pl.feureth.view.desktop.components.ScrollBar
+import pl.feureth.view.desktop.Constants
+import pl.feureth.view.desktop.components.*
 import pl.feureth.view.desktop.screen.Screen
 
 @Composable
@@ -27,26 +31,30 @@ fun BookListScreen(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    Column(modifier = Modifier.padding(end = 16.dp).then(modifier), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Książki", style = MaterialTheme.typography.h4, modifier = Modifier.weight(1f))
-            Button(onClick = { onNavigation.invoke(Screen.BookDetails()) }) {
-                Text("Dodaj")
+    Column(modifier = Modifier.then(modifier)) {
+        Column(
+            modifier = Modifier.padding(end = Constants.Padding.medium),
+            verticalArrangement = Arrangement.spacedBy(Constants.Padding.small)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Title(text = "Książki", modifier = Modifier.weight(1f))
+                TextButton(
+                    text = "Dodaj",
+                    onClick = { onNavigation.invoke(Screen.BookDetails()) }
+                )
             }
-        }
-        Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.Gray))
-        TextField(
-            value = uiState.searchQuery,
-            onValueChange = { viewModel.action(BookListViewModel.Action.FilterSearchQueryChanged(it)) },
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Wyszukaj...") }
-        )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
+            HorizontalLine()
+            TextField(
+                value = uiState.searchQuery,
+                onValueChange = { viewModel.action(BookListViewModel.Action.FilterSearchQueryChanged(it)) },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Wyszukaj...") }
+            )
+            CheckboxWithLabel(
+                label = "Wycofane",
                 checked = uiState.isWithdrawn,
                 onCheckedChange = { viewModel.action(BookListViewModel.Action.FilterIsWithdrawnChanged(it)) }
             )
-            Text("Wycofane", style = MaterialTheme.typography.caption)
         }
 
         Row(modifier = Modifier.weight(1f).fillMaxWidth()) {

@@ -3,11 +3,12 @@ package pl.feureth.view.desktop.screen.book
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import pl.feureth.view.desktop.components.*
 
 @Composable
 fun BookPreviewScreen(
@@ -20,78 +21,70 @@ fun BookPreviewScreen(
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
-        Text(
-            text = if (uiState.bookId == 0L) "Nowa książka" else "Edycja książki",
-            style = MaterialTheme.typography.h4
-        )
+        Title(if (uiState.bookId == 0L) "Nowa książka" else "Edycja książki")
 
-        Column {
-            Text("Tytuł")
-            if (uiState.isEditMode) {
-                TextField(
-                    value = uiState.title,
-                    onValueChange = { viewModel.action(BookViewModel.Action.TitleChanged(it)) },
-                    isError = uiState.titleError.isNotEmpty(),
-                )
-                if (uiState.titleError.isNotEmpty()) {
-                    Text(uiState.titleError, style = MaterialTheme.typography.subtitle1, color = MaterialTheme.colors.error)
-                }
-            } else {
-                Text(uiState.title, style = MaterialTheme.typography.h5)
-            }
-        }
+        HorizontalLine()
 
-        Column {
-            Text("Autor")
-            if (uiState.isEditMode) {
-                TextField(
-                    value = uiState.author,
-                    onValueChange = { viewModel.action(BookViewModel.Action.AuthorChanged(it)) },
-                    isError = uiState.authorError.isNotEmpty(),
-                )
-                if (uiState.authorError.isNotEmpty()) {
-                    Text(uiState.authorError, style = MaterialTheme.typography.subtitle1, color = MaterialTheme.colors.error)
-                }
-            } else {
-                Text(uiState.author, style = MaterialTheme.typography.h5)
-            }
-        }
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
-                checked = uiState.isWithdrawn,
-                onCheckedChange = { viewModel.action(BookViewModel.Action.IsWithdrawnChanged(it)) },
-                enabled = uiState.isEditMode,
+        if (uiState.isEditMode) {
+            TextFieldWithLabel(
+                label = "Tytuł",
+                value = uiState.title,
+                onValueChange = { viewModel.action(BookViewModel.Action.TitleChanged(it)) },
+                error = uiState.titleError
             )
-            Text("Wycofana", style = MaterialTheme.typography.caption)
+        } else {
+            TextWithLabel("Tytuł", uiState.title)
         }
+
+        if (uiState.isEditMode) {
+            TextFieldWithLabel(
+                label = "Autor",
+                value = uiState.author,
+                onValueChange = { viewModel.action(BookViewModel.Action.AuthorChanged(it)) },
+                error = uiState.authorError
+            )
+        } else {
+            TextWithLabel("Autor", uiState.author)
+        }
+
+        CheckboxWithLabel(
+            label = "Wycofana",
+            checked = uiState.isWithdrawn,
+            onCheckedChange = { viewModel.action(BookViewModel.Action.IsWithdrawnChanged(it)) },
+            enabled = uiState.isEditMode,
+        )
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             if (uiState.isEditMode) {
                 if (uiState.bookId == 0L) {
-                    Button(onClick = { onBack.invoke() }) {
-                        Text("Powrót do listy")
-                    }
+                    TextButton(
+                        text = "Powrót do listy",
+                        onClick = { onBack.invoke() }
+                    )
                 } else {
-                    Button(onClick = { viewModel.action(BookViewModel.Action.EditMode(false)) }) {
-                        Text("Anuluj")
-                    }
+                    TextButton(
+                        text = "Anuluj",
+                        onClick = { viewModel.action(BookViewModel.Action.EditMode(false)) }
+                    )
                 }
-                Button(onClick = {
-                    viewModel.submit()
-                    if (uiState.bookId == 0L) {
-                        onBack.invoke()
+                TextButton(
+                    text = "Zapisz",
+                    onClick = {
+                        viewModel.submit()
+                        if (uiState.bookId == 0L) {
+                            onBack.invoke()
+                        }
                     }
-                }) {
-                    Text("Zapisz")
-                }
+                )
             } else {
-                Button(onClick = { onBack.invoke() }) {
-                    Text("Powrót do listy")
-                }
-                Button(onClick = { viewModel.action(BookViewModel.Action.EditMode(true)) }) {
-                    Text("Edytuj")
-                }
+                TextButton(
+                    text = "Powrót do listy",
+                    onClick = { onBack.invoke() }
+                )
+                TextButton(
+                    text = "Edytuj",
+                    onClick = { viewModel.action(BookViewModel.Action.EditMode(true)) }
+                )
             }
         }
     }
