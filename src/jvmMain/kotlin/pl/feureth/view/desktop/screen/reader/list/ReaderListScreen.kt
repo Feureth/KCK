@@ -1,4 +1,4 @@
-package pl.feureth.view.desktop.screen.book.list
+package pl.feureth.view.desktop.screen.reader.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,14 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import pl.feureth.model.Book
+import pl.feureth.model.Reader
 import pl.feureth.view.desktop.Constants
 import pl.feureth.view.desktop.components.*
 import pl.feureth.view.desktop.screen.Screen
 
 @Composable
-fun BookListScreen(
-    viewModel: BookListViewModel,
+fun ReaderListScreen(
+    viewModel: ReaderListViewModel,
     onNavigation: (Screen) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -37,23 +37,23 @@ fun BookListScreen(
             verticalArrangement = Arrangement.spacedBy(Constants.Padding.small)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Title(text = "Książki", modifier = Modifier.weight(1f))
+                Title(text = "Czytelnicy", modifier = Modifier.weight(1f))
                 TextButton(
                     text = "Dodaj",
-                    onClick = { onNavigation.invoke(Screen.BookDetails()) }
+                    onClick = { onNavigation.invoke(Screen.ReaderDetails()) }
                 )
             }
             HorizontalLine()
             TextField(
                 value = uiState.searchQuery,
-                onValueChange = { viewModel.action(BookListViewModel.Action.FilterSearchQueryChanged(it)) },
+                onValueChange = { viewModel.action(ReaderListViewModel.Action.FilterSearchQueryChanged(it)) },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("Wyszukaj...") }
             )
             CheckboxWithLabel(
-                label = "Wycofane",
-                checked = uiState.isWithdrawn,
-                onCheckedChange = { viewModel.action(BookListViewModel.Action.FilterIsWithdrawnChanged(it)) }
+                label = "Zablokowani",
+                checked = uiState.isBlocked,
+                onCheckedChange = { viewModel.action(ReaderListViewModel.Action.FilterIsBlockedChanged(it)) }
             )
         }
 
@@ -63,11 +63,11 @@ fun BookListScreen(
                 contentPadding = PaddingValues(vertical = 8.dp),
                 state = viewModel.lazyListState
             ) {
-                items(uiState.books) {
-                    BookItem(
-                        book = it,
-                        onPreview = { book ->
-                            onNavigation.invoke(Screen.BookDetails(id = book.id))
+                items(uiState.readers) {
+                    ReaderItem(
+                        reader = it,
+                        onPreview = { reader ->
+                            onNavigation.invoke(Screen.ReaderDetails(id = reader.id))
                         }
                     )
                 }
@@ -81,7 +81,7 @@ fun BookListScreen(
 }
 
 @Composable
-fun BookItem(book: Book, onPreview: (Book) -> Unit) {
+fun ReaderItem(reader: Reader, onPreview: (Reader) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth()
             .padding(vertical = 4.dp)
@@ -92,9 +92,8 @@ fun BookItem(book: Book, onPreview: (Book) -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f).fillMaxHeight()) {
-            Text(book.title, color = Color.Black, style = MaterialTheme.typography.body1)
-            Text(book.author, color = Color.Gray, style = MaterialTheme.typography.body2)
+            Text(reader.fullName, color = Color.Black, style = MaterialTheme.typography.body1)
         }
-        Button(onClick = { onPreview.invoke(book) }) { Text("Podgląd") }
+        Button(onClick = { onPreview.invoke(reader) }) { Text("Podgląd") }
     }
 }

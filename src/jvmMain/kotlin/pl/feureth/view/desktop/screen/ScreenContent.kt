@@ -10,6 +10,10 @@ import pl.feureth.view.desktop.screen.book.BookPreviewScreen
 import pl.feureth.view.desktop.screen.book.list.BookListScreen
 import pl.feureth.view.desktop.screen.book.list.BookListViewModel
 import pl.feureth.view.desktop.screen.book.BookViewModel
+import pl.feureth.view.desktop.screen.reader.ReaderScreen
+import pl.feureth.view.desktop.screen.reader.ReaderViewModel
+import pl.feureth.view.desktop.screen.reader.list.ReaderListScreen
+import pl.feureth.view.desktop.screen.reader.list.ReaderListViewModel
 
 @Composable
 fun ScreenContent(
@@ -50,9 +54,27 @@ fun ScreenContent(
             }
 
             Screen.ReaderList -> {
+                val viewModel = ViewModelProvider.provide(ReaderListViewModel::class.java).apply {
+                    onPreRender()
+                }
+                ReaderListScreen(
+                    viewModel = viewModel,
+                    onNavigation = onNavigation,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
 
-            is Screen.ReaderDetails -> TODO()
+            is Screen.ReaderDetails -> {
+                val viewModel = ViewModelProvider.provide(ReaderViewModel::class.java).apply {
+                    setup(screen.id)
+                    onPreRender()
+                }
+                ReaderScreen(
+                    viewModel = viewModel,
+                    onBack = { onNavigation.invoke(Screen.ReaderList) },
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
 
             Screen.BorrowList -> {
             }

@@ -18,6 +18,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ScrollBar(scrollState: LazyListState, modifier: Modifier = Modifier) {
 
+    if (scrollState.layoutInfo.totalItemsCount == 0) {
+        return
+    }
+
     val density = LocalDensity.current
     val firstVisibleItem = scrollState.firstVisibleItemIndex
     val visibleItems = scrollState.layoutInfo.visibleItemsInfo.size
