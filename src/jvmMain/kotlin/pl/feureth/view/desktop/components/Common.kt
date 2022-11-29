@@ -88,7 +88,8 @@ fun TextFieldWithLabel(
     value: String,
     onValueChange: (String) -> Unit,
     error: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    placeholder: String? = null
 ) {
     Column(modifier = Modifier.then(modifier)) {
         Label(label)
@@ -96,6 +97,9 @@ fun TextFieldWithLabel(
             value = value,
             onValueChange = onValueChange,
             isError = error.isNotEmpty(),
+            placeholder = {
+                if (placeholder != null) Text(placeholder)
+            }
         )
         if (error.isNotEmpty()) {
             Text(error, style = MaterialTheme.typography.caption, color = MaterialTheme.colors.error)
@@ -110,7 +114,8 @@ fun TextFieldWithEditMode(
     onValueChange: (String) -> Unit,
     error: String,
     isEditMode: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    placeholder: String? = null
 ) {
     if (isEditMode) {
         TextFieldWithLabel(
@@ -118,6 +123,7 @@ fun TextFieldWithEditMode(
             value = value,
             onValueChange = onValueChange,
             error = error,
+            placeholder = placeholder,
             modifier = modifier
         )
     } else {

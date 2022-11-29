@@ -7,9 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import pl.feureth.view.desktop.Constants
 import pl.feureth.view.desktop.screen.book.BookPreviewScreen
+import pl.feureth.view.desktop.screen.book.BookViewModel
 import pl.feureth.view.desktop.screen.book.list.BookListScreen
 import pl.feureth.view.desktop.screen.book.list.BookListViewModel
-import pl.feureth.view.desktop.screen.book.BookViewModel
+import pl.feureth.view.desktop.screen.borrow.BorrowScreen
+import pl.feureth.view.desktop.screen.borrow.BorrowViewModel
+import pl.feureth.view.desktop.screen.borrow.list.BorrowListScreen
+import pl.feureth.view.desktop.screen.borrow.list.BorrowListViewModel
 import pl.feureth.view.desktop.screen.reader.ReaderScreen
 import pl.feureth.view.desktop.screen.reader.ReaderViewModel
 import pl.feureth.view.desktop.screen.reader.list.ReaderListScreen
@@ -22,10 +26,7 @@ fun ScreenContent(
     modifier: Modifier = Modifier
 ) {
 
-    Box(
-        modifier = modifier
-            .padding(top = Constants.Padding.medium)
-    ) {
+    Box(modifier = modifier.padding(top = Constants.Padding.medium)) {
         when (screen) {
             Screen.Start -> {
             }
@@ -49,6 +50,7 @@ fun ScreenContent(
                 BookPreviewScreen(
                     viewModel = viewModel,
                     onBack = { onNavigation.invoke(Screen.BookList) },
+                    onBorrowPreview = { onNavigation.invoke(Screen.BorrowDetails(it.id)) },
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -72,14 +74,33 @@ fun ScreenContent(
                 ReaderScreen(
                     viewModel = viewModel,
                     onBack = { onNavigation.invoke(Screen.ReaderList) },
+                    onBorrowPreview = { onNavigation.invoke(Screen.BorrowDetails(it.id)) },
                     modifier = Modifier.fillMaxSize(),
                 )
             }
 
             Screen.BorrowList -> {
+                val viewModel = ViewModelProvider.provide(BorrowListViewModel::class.java).apply {
+                    onPreRender()
+                }
+                BorrowListScreen(
+                    viewModel = viewModel,
+                    onNavigation = onNavigation,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
 
-            is Screen.BorrowDetails -> TODO()
+            is Screen.BorrowDetails -> {
+                val viewModel = ViewModelProvider.provide(BorrowViewModel::class.java).apply {
+                    setup(screen.id)
+                    onPreRender()
+                }
+                BorrowScreen(
+                    viewModel = viewModel,
+                    onBack = { onNavigation.invoke(Screen.BorrowList) },
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
     }
 }

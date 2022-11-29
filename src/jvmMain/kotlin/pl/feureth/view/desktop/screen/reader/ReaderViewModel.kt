@@ -27,7 +27,7 @@ class ReaderViewModel : ViewModel(), KoinComponent {
             surname = reader?.surname ?: "",
             isBlocked = reader?.isBlocked ?: false,
             isEditMode = reader == null,
-            borrows = if (reader == null) emptyList() else bookRepository.getBorrows(reader = reader)
+            borrows = if (reader == null) emptyList() else bookRepository.getBorrows(reader = reader).sortedBy { it.endTime }
         )
     }
 

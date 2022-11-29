@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import pl.feureth.model.Book
+import pl.feureth.model.Borrow
 import pl.feureth.presenter.book.BookRepository
 import pl.feureth.view.desktop.screen.ViewModel
 
@@ -25,7 +26,8 @@ class BookViewModel : ViewModel(), KoinComponent {
             title = book?.title ?: "",
             author = book?.author ?: "",
             isWithdrawn = book?.isWithdrawn ?: false,
-            isEditMode = book == null
+            isEditMode = book == null,
+            borrows = if (book == null) emptyList() else bookRepository.getBorrows(book = book).sortedBy { it.endTime }
         )
     }
 
@@ -82,7 +84,8 @@ class BookViewModel : ViewModel(), KoinComponent {
         val author: String = "",
         val authorError: String = "",
         val isWithdrawn: Boolean = false,
-        val isEditMode: Boolean = false
+        val isEditMode: Boolean = false,
+        val borrows: List<Borrow> = emptyList(),
     )
 
     sealed class Action {

@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import pl.feureth.view.AppView
@@ -29,7 +30,7 @@ class DesktopView : AppView {
             state = windowState
         ) {
             LaunchedEffect(Unit) {
-                window.minimumSize = Dimension(800, 600)
+                window.minimumSize = Dimension(1024, 768)
             }
             MaterialTheme {
                 MainContainer()

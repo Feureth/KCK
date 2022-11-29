@@ -2,17 +2,22 @@ package pl.feureth.view.desktop.screen.book
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import pl.feureth.model.Borrow
 import pl.feureth.view.desktop.components.*
+import pl.feureth.view.desktop.screen.borrow.list.BorrowItem
 
 @Composable
 fun BookPreviewScreen(
     viewModel: BookViewModel,
     onBack: () -> Unit,
+    onBorrowPreview: (Borrow) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -62,8 +67,7 @@ fun BookPreviewScreen(
                 TextButton(
                     text = "Zapisz",
                     onClick = {
-                        viewModel.submit()
-                        if (uiState.bookId == 0L) {
+                        if (viewModel.submit() && uiState.bookId == 0L) {
                             onBack.invoke()
                         }
                     }
@@ -84,7 +88,7 @@ fun BookPreviewScreen(
             Title("Wypożyczenia")
             LazyColumn {
                 items(uiState.borrows) {
-
+                    BorrowItem(it, onPreview = onBorrowPreview)
                 }
             }
         }

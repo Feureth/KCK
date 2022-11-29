@@ -9,12 +9,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import pl.feureth.model.Borrow
 import pl.feureth.view.desktop.components.*
+import pl.feureth.view.desktop.screen.borrow.list.BorrowItem
 
 @Composable
 fun ReaderScreen(
     viewModel: ReaderViewModel,
     onBack: () -> Unit,
+    onBorrowPreview: (Borrow) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -64,8 +67,7 @@ fun ReaderScreen(
                 TextButton(
                     text = "Zapisz",
                     onClick = {
-                        viewModel.submit()
-                        if (uiState.readerId == 0L) {
+                        if (viewModel.submit() && uiState.readerId == 0L) {
                             onBack.invoke()
                         }
                     }
@@ -86,7 +88,7 @@ fun ReaderScreen(
             Title("Wypożyczenia")
             LazyColumn {
                 items(uiState.borrows) {
-
+                    BorrowItem(it, onPreview = onBorrowPreview)
                 }
             }
         }
