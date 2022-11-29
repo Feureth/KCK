@@ -133,7 +133,7 @@ fun BorrowScreen(
                     if (uiState.isEditMode) {
                         if (uiState.borrowId == 0L) {
                             TextButtonSecondary(
-                                text = "Powrót do listy",
+                                text = "Cofnij",
                                 onClick = { onBack.invoke() }
                             )
                         } else {
@@ -152,7 +152,7 @@ fun BorrowScreen(
                         )
                     } else {
                         TextButton(
-                            text = "Powrót do listy",
+                            text = "Cofnij",
                             onClick = { onBack.invoke() }
                         )
                         TextButton(

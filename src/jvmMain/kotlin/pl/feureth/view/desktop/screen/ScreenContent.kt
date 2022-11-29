@@ -3,7 +3,7 @@ package pl.feureth.view.desktop.screen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import pl.feureth.view.desktop.Constants
 import pl.feureth.view.desktop.screen.book.BookPreviewScreen
@@ -26,10 +26,10 @@ fun ScreenContent(
     modifier: Modifier = Modifier
 ) {
 
+    var previousScreen by remember { mutableStateOf<Screen?>(null) }
+
     Box(modifier = modifier.padding(top = Constants.Padding.medium)) {
         when (screen) {
-            Screen.Start -> {
-            }
 
             Screen.BookList -> {
                 val viewModel = ViewModelProvider.provide(BookListViewModel::class.java).apply {
@@ -47,6 +47,7 @@ fun ScreenContent(
                     setup(screen.id)
                     onPreRender()
                 }
+                previousScreen = screen
                 BookPreviewScreen(
                     viewModel = viewModel,
                     onBack = { onNavigation.invoke(Screen.BookList) },
@@ -71,6 +72,7 @@ fun ScreenContent(
                     setup(screen.id)
                     onPreRender()
                 }
+                previousScreen = screen
                 ReaderScreen(
                     viewModel = viewModel,
                     onBack = { onNavigation.invoke(Screen.ReaderList) },
@@ -83,6 +85,7 @@ fun ScreenContent(
                 val viewModel = ViewModelProvider.provide(BorrowListViewModel::class.java).apply {
                     onPreRender()
                 }
+                previousScreen = null
                 BorrowListScreen(
                     viewModel = viewModel,
                     onNavigation = onNavigation,
@@ -97,7 +100,10 @@ fun ScreenContent(
                 }
                 BorrowScreen(
                     viewModel = viewModel,
-                    onBack = { onNavigation.invoke(Screen.BorrowList) },
+                    onBack = {
+                        if (previousScreen == null) onNavigation.invoke(Screen.BorrowList)
+                        else onNavigation.invoke(previousScreen!!)
+                    },
                     modifier = Modifier.fillMaxSize(),
                 )
             }

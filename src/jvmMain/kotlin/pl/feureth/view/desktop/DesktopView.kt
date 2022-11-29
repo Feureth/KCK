@@ -42,7 +42,7 @@ class DesktopView : AppView {
 @Composable
 fun MainContainer() {
 
-    var currentScreen by remember { mutableStateOf<Screen>(Screen.Start) }
+    var currentScreen by remember { mutableStateOf<Screen>(Screen.BorrowList) }
 
     Row(modifier = Modifier.fillMaxSize()) {
         MainMenu(
