@@ -46,6 +46,7 @@ fun MainContainer() {
 
     Row(modifier = Modifier.fillMaxSize()) {
         MainMenu(
+            currentScreen = currentScreen,
             onNavigation = { currentScreen = it },
             modifier = Modifier.width(250.dp).fillMaxHeight()
         )
