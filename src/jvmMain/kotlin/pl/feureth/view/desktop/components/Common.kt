@@ -39,6 +39,16 @@ fun TextButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier)
 }
 
 @Composable
+fun TextButtonSecondary(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = Modifier.then(modifier)
+    ) {
+        Text(text)
+    }
+}
+
+@Composable
 fun CheckboxWithLabel(
     label: String,
     checked: Boolean,
@@ -90,5 +100,37 @@ fun TextFieldWithLabel(
         if (error.isNotEmpty()) {
             Text(error, style = MaterialTheme.typography.caption, color = MaterialTheme.colors.error)
         }
+    }
+}
+
+@Composable
+fun TextFieldWithEditMode(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    error: String,
+    isEditMode: Boolean,
+    modifier: Modifier = Modifier
+) {
+    if (isEditMode) {
+        TextFieldWithLabel(
+            label = label,
+            value = value,
+            onValueChange = onValueChange,
+            error = error,
+            modifier = modifier
+        )
+    } else {
+        TextWithLabel(label, value, modifier)
+    }
+}
+
+@Composable
+fun ActionsContainer(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.then(modifier)) {
+        content.invoke()
     }
 }

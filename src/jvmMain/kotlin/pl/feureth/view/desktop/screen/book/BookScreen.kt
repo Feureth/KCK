@@ -2,7 +2,6 @@ package pl.feureth.view.desktop.screen.book
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,27 +24,20 @@ fun BookPreviewScreen(
 
         HorizontalLine()
 
-        if (uiState.isEditMode) {
-            TextFieldWithLabel(
-                label = "Tytuł",
-                value = uiState.title,
-                onValueChange = { viewModel.action(BookViewModel.Action.TitleChanged(it)) },
-                error = uiState.titleError
-            )
-        } else {
-            TextWithLabel("Tytuł", uiState.title)
-        }
-
-        if (uiState.isEditMode) {
-            TextFieldWithLabel(
-                label = "Autor",
-                value = uiState.author,
-                onValueChange = { viewModel.action(BookViewModel.Action.AuthorChanged(it)) },
-                error = uiState.authorError
-            )
-        } else {
-            TextWithLabel("Autor", uiState.author)
-        }
+        TextFieldWithEditMode(
+            label = "Tytuł",
+            value = uiState.title,
+            onValueChange = { viewModel.action(BookViewModel.Action.TitleChanged(it)) },
+            error = uiState.titleError,
+            isEditMode = uiState.isEditMode
+        )
+        TextFieldWithEditMode(
+            label = "Autor",
+            value = uiState.author,
+            onValueChange = { viewModel.action(BookViewModel.Action.AuthorChanged(it)) },
+            error = uiState.authorError,
+            isEditMode = uiState.isEditMode
+        )
 
         CheckboxWithLabel(
             label = "Wycofana",
@@ -54,15 +46,15 @@ fun BookPreviewScreen(
             enabled = uiState.isEditMode,
         )
 
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        ActionsContainer {
             if (uiState.isEditMode) {
                 if (uiState.bookId == 0L) {
-                    TextButton(
+                    TextButtonSecondary(
                         text = "Powrót do listy",
                         onClick = { onBack.invoke() }
                     )
                 } else {
-                    TextButton(
+                    TextButtonSecondary(
                         text = "Anuluj",
                         onClick = { viewModel.action(BookViewModel.Action.EditMode(false)) }
                     )
