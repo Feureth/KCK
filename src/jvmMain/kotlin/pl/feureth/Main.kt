@@ -8,14 +8,18 @@ import pl.feureth.presenter.book.LocalBookRepository
 import pl.feureth.view.AppView
 import pl.feureth.view.console.ConsoleView
 import pl.feureth.view.desktop.DesktopView
+import java.io.File
 
-class Main : KoinComponent {
+class Main(isDesktop: Boolean) : KoinComponent {
 
     init {
         startKoin {
             modules(
                 module {
-                    single<AppView> { DesktopView() }
+                    single<AppView> {
+                        if (isDesktop) DesktopView()
+                        else ConsoleView()
+                    }
                     single<BookRepository> { LocalBookRepository() }
                 }
             )
@@ -26,7 +30,9 @@ class Main : KoinComponent {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            Main()
+            val file = File(this::class.java.classLoader.getResource("args.txt")?.file ?: "")
+            val isDesktop = file.readText() == "1"
+            Main(isDesktop)
         }
     }
 }
